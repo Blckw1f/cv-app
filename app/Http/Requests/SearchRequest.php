@@ -17,12 +17,12 @@ class SearchRequest extends FormRequest
             'start_date' => [
                 'required',
                 'date',
-                'before:end_date'
+                'before_or_equal:end_date'
             ],
             'end_date' => [
                 'required',
                 'date',
-                'after:started_at'
+                'after_or_equal:started_at'
             ],
         ];
     }
