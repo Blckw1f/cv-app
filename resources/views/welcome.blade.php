@@ -85,6 +85,9 @@
                             <br>
                             <br>
                         </form>
+                        <button type="button" name="buttonFind" id="buttonFind">Справки</button>
+                        <br>
+                        <br>
                     </main>
 
                     <footer class="py-16 text-center text-sm text-black dark:text-white/70">
@@ -131,6 +134,9 @@
         });
         $("#buttonShowSkill").click(function(){
             $("#add-skill-form").toggle();
+        });
+        $("#buttonFind").click(function(){
+            window.location.replace("/find");
         });
     });
 </script>

@@ -21,23 +21,36 @@
     <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
         <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
             <header>
-                Създаване на CV
+                Търсене на CV
             </header>
 
             <main class="mt-6">
-                <form action="/cv" method="POST">
+                <form>
                     @csrf
 
-                    <label for="birth_date">Дата на раждане</label>
-                    <input type="date" id="birth_date" name="birth_date" />
+                    <label for="start_date">Дата на раждане</label>
+                    <input type="date" id="start_date" name="start_date" />
                     <br>
                     <br>
-                    <label for="birth_date">Дата на раждане</label>
-                    <input type="date" id="birth_date" name="birth_date" />
+                    <label for="end_date">Дата на раждане</label>
+                    <input type="date" id="end_date" name="end_date" />
                     <br>
                     <br>
-                    <button type="submit">Запис</button>
+                    <button type="button" name="buttonSearch" id="buttonSearch">Търси</button>
+                    <br>
+                    <br>
                 </form>
+                <button type="button" name="buttonCV" id="buttonCV">Добави CV</button>
+                <br>
+                <br>
+                <table id="table">
+                    <tr>
+                        <th>Имена</th>
+                        <th>Дата на раждане</th>
+                        <th>Университет</th>
+                        <th>Умения</th>
+                    </tr>
+                </table>
             </main>
 
             <footer class="py-16 text-center text-sm text-black dark:text-white/70">
@@ -48,3 +61,50 @@
 </div>
 </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#buttonSearch").click(function () {
+            const formData = $('form').serializeArray();
+            $.post("/search", formData).done(
+                function(response){
+                    response.forEach((data) => {
+                        console.log(data.skills);
+                        const tr = document.createElement("tr");
+                        tr.setAttribute('id', data.id)
+                        document.getElementById("table").appendChild(tr);
+
+                        let td = document.createElement("td");
+                        const f_name = document.createTextNode(data.person.first_name + ' ');
+                        const s_name = document.createTextNode(data.person.second_name + ' ');
+                        const t_name = document.createTextNode(data.person.third_name);
+                        td.appendChild(f_name);
+                        td.appendChild(s_name);
+                        td.appendChild(t_name);
+                        document.getElementById(data.id).appendChild(td);
+
+                        td = document.createElement("td");
+                        const b_date = document.createTextNode(data.person.birth_date);
+                        td.appendChild(b_date);
+                        document.getElementById(data.id).appendChild(td);
+
+                        td = document.createElement("td");
+                        const university = document.createTextNode(data.university.name);
+                        td.appendChild(university);
+                        document.getElementById(data.id).appendChild(td);
+
+                        td = document.createElement("td");
+                        data.skills.forEach((skill) => {
+                            const newSkill = document.createTextNode(skill.name + ' ');
+                            td.appendChild(newSkill);
+                        })
+                        document.getElementById(data.id).appendChild(td);
+                    });
+
+                });
+        });
+        $("#buttonCV").click(function(){
+            window.location.replace("/");
+        });
+    });
+</script>
